@@ -4,9 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>MAIN</title>
 </head>
 <body>
-	<jsp:forward page="WEB-INF/views/main.jsp"/>
+	<jsp:include page="common/header.jsp"/>
+	
+	<div style="height:600px"></div>
+
+	<jsp:include page="common/footer.jsp"/>
 </body>
 </html>

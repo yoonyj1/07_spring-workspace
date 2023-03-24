@@ -31,8 +31,8 @@
 		 	dataSource.setPassword("spring");
 		  -->
 		  
-		  <bean class="org.mybatis.spring.SqlSessionFactoryBean">
-		  	<property name="configLocation" value="classPath:mybatis-config.xml"/>
+		  <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		  	<property name="configLocation" value="classpath:mybatis-config.xml"/>
 		  	<property name="dataSource" ref="dataSource"/>
 		  </bean>
 		  
@@ -43,4 +43,20 @@
 		   -->
 		   
 		   <!-- property는 setter 주입이라고 생각하면 됨 -->
+		   <bean class="org.mybatis.spring.SqlSessionTemplate">
+		   	<constructor-arg ref="sqlSessionFactory"/>
+		   </bean>
+		   
+		   <!-- 
+		   		SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory);
+		    -->
+		    
+		    <!-- 
+		    	constructor-arg: 매개변수 생성자 주입이라고 생각하면 됨
+		     -->
+		     
+		     <!-- 
+		     	property: setter 주입
+		     	constructor-arg: 생성자 주입
+		      -->
 </beans>

@@ -23,6 +23,19 @@
 	
 	<context:component-scan base-package="com.kh.spring" />
 	
-	
+	<!-- 
+		* 사용자가 어떤 url로 요청 시 해당 이 문서가 읽혀진다고 보면 됨
+		HandlerMapping을 통해서 어떤 url로 요청 시 어떤 controller를 구동시킬지를 알아내야함 => 해당 Controller가 실행되도록
+		
+		1. 요청 때마다 실행 될 Controller 클래스들이 bean으로 등록되어있어야함
+		
+		2. 어떤 url로 요청 시 어떤 Controller를 구동시킬건지 매핑 시키는 HandlerMapping 관련한 클래스 빈으로 등록해야함
+		
+		1번 예시) bean 등록: xml 등록
+		<beans bean class="com.kh.spring.member.controller.LoginController id="loginController"/> 
+		<beans bean class="com.kh.spring.member.controller.LogoutController id="logoutController"/>
+		
+		 
+	 -->
 	
 </beans:beans>

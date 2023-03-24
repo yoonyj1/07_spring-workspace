@@ -35,7 +35,16 @@
 		<beans bean class="com.kh.spring.member.controller.LoginController id="loginController"/> 
 		<beans bean class="com.kh.spring.member.controller.LogoutController id="logoutController"/>
 		
-		 
+		1번 예시) 어노테이션 방법
+		@Controller
+		
+		2번
+		<beans: bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+			<beans:property name= "mappings">
+				<beans: prop key="login.me"></beans:prop>
+				<beans: prop key="logout.me"></beans:prop>
+			</beans>
+		</beans>
 	 -->
 	
 </beans:beans>

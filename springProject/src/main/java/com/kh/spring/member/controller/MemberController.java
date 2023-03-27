@@ -1,9 +1,11 @@
 package com.kh.spring.member.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -87,7 +89,7 @@ public class MemberController {
 		 *  	스프링 컨테이너가 해당 객체를 기본 생성자로 생성 후 setter 메소드 찾아서 => 기본생성자와 getter/setter 메소드를 무조건 생성해야한다는 말
 		 *  	요청 시 전달값을 해당 필드에 담아주는 내부적인 원리
 		 */
-	
+		/*
 		@RequestMapping("login.me")
 		public String loginMember(Member m) {
 			// System.out.println("ID: " + m.getUserId());
@@ -95,6 +97,38 @@ public class MemberController {
 			
 			Member loginUser = mService.loginMember(m);
 			
-			return "main";
+			if(loginUser == null) { // 로그인 실패 => requestScope에 담아서 errorPage 포워딩
+				System.out.println("로그인 실패");
+			} else { // 로그인 성공 => loginUser sessionScope에 담아서 메인페이지 url 재요청
+				System.out.println("로그인 성공");
+			}
+			
+			return "main"; => "WEB-INF/views/" + "main" + ".jsp"
 		}
+		*/
+	
+	
+	/*
+	 *  * 요청 처리 후 응답페이지로 포워딩 또는 url 재요청, 응답데이터 담는 방법
+	 *  
+	 *  1. 스프링에서 제공하는 Model 객체를 사용하는 방법
+	 *  	포워딩할 뷰로 전달하고자 하는 데이터를 맵 형식(key-value)으로 담을 수 있는 영역
+	 *  	Model 객체는 requestScope이다.
+	 *  	단, setAttribute가 아닌 addAttribute 메소드 이용
+	 */
+	@RequestMapping("login.me")
+	public String loginMember(Member m, Model model, HttpSession session) {
+		Member loginUser = mService.loginMember(m);
+		
+		if(loginUser == null) { 
+			model.addAttribute("errorMsg", "로그인 실패");
+			
+			return "common/errorPage";
+		} else { 
+			session.setAttribute("loginUser", loginUser);
+			
+			return "redirect:/"; // 포워딩방식이 아닌 => 메인페이지로 재요청한다는 뜻 / redirect:/ => 메인화면으로 요청
+		}
+		
+	}
 }

@@ -168,4 +168,12 @@ public class MemberController {
 	public String EnrollMemberForm() {
 		return "member/memberEnrollForm";
 	}
+	
+	@RequestMapping("insert.me")
+	public void insertMember(Member m) {
+		System.out.println(m);
+		// 1. 한글 깨짐 => 스프링에서 제공하는 Encoding 필터 등록 => web.xml에 등록
+		// 2. 나이를 입력하지 않았을 경우 "" 빈 문자열이 넘어오는 데 int 형 필드에 담을 수 없어서 400에러 발생
+		// 	=> Member 클래스의 age 필드를 int 형 => String형으로 변경(오라클은 자동 형변환 되서 상관없음)
+	}
 }

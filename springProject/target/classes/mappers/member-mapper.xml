@@ -18,6 +18,7 @@
 	</resultMap>
 	
 	<select id="loginMember" parameterType="Member" resultMap="memberResultSet">
+		<!-- 
 		select
 			  USER_ID
 			, USER_PWD
@@ -38,5 +39,51 @@
 			user_pwd = #{userPwd}
 		and
 			status = 'Y'	
+		 -->
+		 
+		 select
+			  USER_ID
+			, USER_PWD
+			, USER_NAME
+			, EMAIL
+			, GENDER
+			, AGE
+			, PHONE
+			, ADDRESS
+			, ENROLL_DATE
+			, MODIFY_DATE
+			, STATUS
+		from 
+			member
+		where
+			user_id = #{userId}
+		and
+			status = 'Y'	
 	</select>
+	
+	<insert id="insertMember">
+		insert
+			into member
+			(
+			   user_id
+			 , user_pwd
+			 , user_name
+			 , email
+			 , gender
+			 , age
+			 , phone
+			 , address	
+			)
+			values
+			(
+			   #{userId}
+			 , #{userPwd}
+			 , #{userName}
+			 , #{email}
+			 , #{gender}
+			 , #{age}
+			 , #{phone}
+			 , #{address}
+			)
+	</insert>
 </mapper>

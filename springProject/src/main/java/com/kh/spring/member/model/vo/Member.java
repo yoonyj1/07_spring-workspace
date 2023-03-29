@@ -34,6 +34,6 @@ public class Member {
 	private Date modifyDate;
 	private String status;
 	
-	private String uName;
-	
+	 // private String uName;
+	// 주의 사항 - 롬복 사용해서 필드명 작성 시 적어도 소문자 두글자 이상으로 시작할것
 }

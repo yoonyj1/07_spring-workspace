@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,9 @@ public class MemberController {
 	@Autowired // DI(Dependency Injection) 특징 = 의존성 주입
 	// private MemberService mService; // 권장
 	private MemberServiceImpl mService; // 권장
+	
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	/*
 	@RequestMapping(value="login.me") // RequestMapping 타입의 어노테이션을 붙여줌으로써 HandlerMapping 등록
@@ -142,6 +146,7 @@ public class MemberController {
 	 */
 	@RequestMapping("login.me")
 	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv) {
+		/* 암호화 전 로그인 메소드
 		Member loginUser = mService.loginMember(m);
 		
 		if(loginUser == null) { 
@@ -152,6 +157,26 @@ public class MemberController {
 			session.setAttribute("loginUser", loginUser);
 			
 			mv.setViewName("redirect:/");
+		}
+		
+		return mv;
+		*/
+		// 암호화 작업 후에 해야하는 과정
+		// Member m userId: 사용자가 입력한 아이디
+		// 			userPwd: 사용자가 입력한 비밀번호(평문)
+		Member loginUser = mService.loginMember(m);
+		// loginUser: 오로지 아이디만을 가지고 조회한 회원
+		// loginUser userPwd: db에 기록된 비밀번호 (암호문)
+		
+		if(loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
+			// 로그인 성공
+			session.setAttribute("loginUser", loginUser);
+			
+			mv.setViewName("redirect:/");
+		} else { // 로그인 실패
+			mv.addObject("errorMsg", "로그인 실패");
+			
+			mv.setViewName("common/errorPage");
 		}
 		
 		return mv;
@@ -170,10 +195,35 @@ public class MemberController {
 	}
 	
 	@RequestMapping("insert.me")
-	public void insertMember(Member m) {
-		System.out.println(m);
+	public String insertMember(Member m, Model model, HttpSession session) {
+		// System.out.println(m);
 		// 1. 한글 깨짐 => 스프링에서 제공하는 Encoding 필터 등록 => web.xml에 등록
 		// 2. 나이를 입력하지 않았을 경우 "" 빈 문자열이 넘어오는 데 int 형 필드에 담을 수 없어서 400에러 발생
 		// 	=> Member 클래스의 age 필드를 int 형 => String형으로 변경(오라클은 자동 형변환 되서 상관없음)
+		// 3. 비밀번호가 사용자가 입력한 그대로의 평문
+		// 	=> Bcrypt 방식의 암호화 통해서 암호문으로 변경
+		//		1) 스프링 시큐리티 모듈에서 제공하고 있음(라이브러리 추가 pom.xml)
+		//		2) BcryptPassWordEncoder 라는 클래스를 빈으로 등록(spring-security.xml 파일에)
+		//		3) web.xml에 spring-security.xml 파일을 pre-loading할 수 있도록 작성
+		// System.out.println("평문: " + m.getUserPwd());
+		
+		// 암호화 작업(암호문을 만들어내는 과정)
+		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+		// System.out.println(encPwd);
+		m.setUserPwd(encPwd); // Member 객체에 userPwd에 평문이 아닌 암호문으로 변경
+		
+		int result = mService.insertMember(m);
+		
+		if(result > 0) { // 성공 => 메인페이지 url 재요청! 알림창
+			session.setAttribute("alertMsg", "회원가입 성공");
+			
+			return "redirect:/";
+		} else { // 실패 => 에러문구 담아서 에러페이지 포워딩
+			model.addAttribute("errorMsg", "회원가입 실패");
+			
+			return "common/errorPage";
+		}
 	}
+	
+	
 }

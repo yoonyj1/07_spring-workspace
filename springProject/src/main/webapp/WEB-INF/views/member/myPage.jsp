@@ -21,48 +21,49 @@
            <form action="update.me" method="post">
                <div class="form-group">
                    <label for="userId">* ID :</label>
-                   <input type="text" class="form-control" id="userId" name="" value="${ loginUser.userId }" readonly><br>
+                   <input type="text" class="form-control" id="userId" name="userId" value="${ loginUser.userId }" readonly><br>
                    
                    <label for="userName">* Name :</label>
-                   <input type="text" class="form-control" id="userName" name="" value="${ loginUser.userName }" readonly><br>
+                   <input type="text" class="form-control" id="userName" name="userName" value="${ loginUser.userName }" required><br>
                    
                    <label for="email"> &nbsp; Email :</label>
-                   <input type="email" class="form-control" id="email" name="" value="${ loginUser.email }"><br>
+                   <input type="email" class="form-control" id="email" name="email" value="${ loginUser.email }"><br>
                    
                    <label for="age"> &nbsp; Age :</label>
-                   <input type="number" class="form-control" id="age" name="" value="${ loginUser.age }"><br>
+                   <input type="number" class="form-control" id="age" name="age" value="${ loginUser.age }"><br>
                    
                    <label for="phone"> &nbsp; Phone :</label>
-                   <input type="tel" class="form-control" id="phone" name="" value="${ loginUser.phone }"><br>
+                   <input type="tel" class="form-control" id="phone" name="phone" value="${ loginUser.phone }"><br>
                    
                    <label for="address"> &nbsp; Address :</label>
-                   <input type="text" class="form-control" id="address" name="" value="${ loginUser.address }"><br>
-                    <!--
-                   <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
-                    <input type="radio" name="" id="Male" value="M" >
-                    <label for="Male">남자</label> &nbsp;&nbsp;
-                    <input type="radio" name="" id="Female" value="F">
-                    <label for="Female">여자</label><br>
-                    -->
+                   <input type="text" class="form-control" id="address" name="address" value="${ loginUser.address }"><br>
                    
+                   <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
+                    <input type="radio" name="gender" id="Male" value="M" >
+                    <label for="Male">남자</label> &nbsp;&nbsp;
+                    <input type="radio" name="gender" id="Female" value="F">
+                    <label for="Female">여자</label><br>
+                    
+                   
+                   <!-- 
                    <c:choose>
                    		<c:when test="${ loginUser.gender } == 'M'">
 		                   <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
-		                   <input type="radio" name="" id="Male" value="M" checked>
+		                   <input type="radio" name="gender" id="Male" value="M" checked>
 		                   <label for="Male">남자</label> &nbsp;&nbsp;
-		                   <input type="radio" name="" id="Female" value="F">
+		                   <input type="radio" name="gender" id="Female" value="F">
 		                   <label for="Female">여자</label><br>
                    		</c:when>
                    		<c:otherwise>
                    		   <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
-		                   <input type="radio" name="" id="Male" value="M">
+		                   <input type="radio" name="gender" id="Male" value="M">
 		                   <label for="Male">남자</label> &nbsp;&nbsp;
-		                   <input type="radio" name="" id="Female" value="F" checked>
+		                   <input type="radio" name="gender" id="Female" value="F" checked>
 		                   <label for="Female">여자</label><br>
                    		</c:otherwise>
                    </c:choose>
-              
-                   <!--
+              	   -->
+                  <!-- 
                    <script>
                    		$(function(){
                             let getGender = "${loginUser.gender}" ;
@@ -76,7 +77,15 @@
                             }
                         })
                    </script>
-                   -->
+                    -->
+                    
+                   <script>
+                   	$(function(){
+                   		if("${loginUser.gender}" != ""){
+                   			$("input[value=${loginUser.gender}]").attr("checked", true);
+                   		}
+                   	})
+                   </script>
                </div>
                <br>
                <div class="btns" align="center">

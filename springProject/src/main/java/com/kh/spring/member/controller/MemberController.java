@@ -230,4 +230,28 @@ public class MemberController {
 		return "member/myPage";
 	}
 	
+	@RequestMapping("update.me")
+	public String updateMember(Member m, HttpSession session, Model model) {
+		int result = mService.updateMember(m);
+		
+		if(result > 0) { // 수정 성공
+			// DB로부터 수정된 회원 정보를 다시 조회해와서
+			// session loginUser 키값으로 덮어씌워야함
+			
+			// Member updateMem = mService.loginMember(m);
+			// session.setAttribute("loginUser", updateMem);
+			// 위의 두 줄을 한 줄로
+			session.setAttribute("loginUser", mService.loginMember(m));
+			
+			// alertMsg에 담기
+			session.setAttribute("alertMsg", "회원정보 수정 완료");
+			
+			// 마이페이지에 url 재요청
+			return "redirect:mypage.me";
+		} else { // 수정 실패
+			model.addAttribute("errorMsg", "회원정보 수정 실패");
+			
+			return "common/errorPage";
+		}
+	}
 }

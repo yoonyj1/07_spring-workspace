@@ -101,4 +101,13 @@
 	    where
 	    	user_id = #{userId}
 	</update>
+	
+	<update id="deleteMember">
+		update
+			member
+		set
+			status = 'N'
+		where
+			user_id = #{userId}
+	</update>
 </mapper>

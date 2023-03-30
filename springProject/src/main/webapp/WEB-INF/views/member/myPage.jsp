@@ -117,9 +117,10 @@
                                    정말로 탈퇴 하시겠습니까?
                    </b>
 
-                   <form action="" method="post">
+                   <form action="delete.me" method="post">
                            비밀번호 : 
                        <input type="password" name="userPwd" required>
+                       <input type="hidden" name="userId" value=${ loginUser.userId }>
                        <button type="submit" class="btn btn-danger">탈퇴하기</button>
                    </form>
 

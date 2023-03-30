@@ -46,8 +46,10 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public int deleteMember(Member m) {
-		return 0;
+	public int deleteMember(String userId) {
+		int result = mDao.deleteMember(sqlSession, userId);
+		
+		return result;
 	}
 
 	@Override

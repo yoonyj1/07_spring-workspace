@@ -254,4 +254,38 @@ public class MemberController {
 			return "common/errorPage";
 		}
 	}
+	
+	@RequestMapping("delete.me")
+	public String deleteMember(String userPwd, String userId, HttpSession session, Model model) {
+		// userPwd: 회원탈퇴 요청 시 사용자가 입력한 비밀번호 평문
+		// session에 loginUser Member 객체 userPwd 필드: db로부터 조회 된 비번(암호문)
+		
+		String encPwd = ((Member)session.getAttribute("loginUser")).getUserPwd();
+		
+		// System.out.println("평문 비번: " + userPwd);
+		// System.out.println("암호문 비번: " + encPwd);
+		
+		if(bcryptPasswordEncoder.matches(userPwd, encPwd)) {
+			// 비번 맞음 => 탈퇴 처리
+			int result = mService.deleteMember(userId);
+			
+			if(result > 0) { // 탈퇴처리 성공 => session loginUser 지움, alert 메시지 담아서 메인페이지 url 재요청
+				session.removeAttribute("loginUser");
+				
+				session.setAttribute("alertMsg", "회원탈퇴가 되었습니다. 그동안 이용해주셔서 감사합니다");
+				
+				return "redirect:/";
+			} else {  // 탈퇴처리 실패 => 에러문구 담아서 에러페이지 포워딩
+				model.addAttribute("errorMsg", "회원탈퇴 실패");
+				
+				return "common/errorPage";
+			}
+			
+		} else { // 비밀번호가 틀린 경우 => 비밀번호 틀린 것 알려주고 마이페이지 보여지게
+			session.setAttribute("alertMsg", "비밀번호를 잘못 입력하셨습니다.");
+			
+			return "redirect:mypage.me";
+		}
+		
+	}
 }

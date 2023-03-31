@@ -2,7 +2,7 @@ package com.kh.spring.board.model.dao;
 
 import java.util.ArrayList;
 
-import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.RowBounds;import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -25,5 +25,17 @@ public class BoardDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
 		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
+	}
+	
+	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.insert("boardMapper.insertBoard", b);
+	}
+	
+	public int increaseCount(SqlSessionTemplate sqlSession, int bno) {
+		return sqlSession.update("boardMapper.increaseCount", bno);
+	}
+	
+	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
 	}
 }

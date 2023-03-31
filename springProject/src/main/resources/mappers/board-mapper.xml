@@ -72,6 +72,7 @@ update
 			board_title
 		  , board_writer
 		  , create_date
+		  , origin_name
 		  , change_name
 		  , board_content
   	from

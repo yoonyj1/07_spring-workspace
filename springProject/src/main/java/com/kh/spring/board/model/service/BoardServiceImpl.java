@@ -51,8 +51,8 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public int updateBoard(int boardNo, Board b) {
-		return 0;
+	public int updateBoard(Board b) {
+		return bDao.updateBoard(sqlSession, b);
 	}
 
 	@Override

@@ -198,7 +198,83 @@ public class BoardController {
 	}
 	
 	@RequestMapping("delete.bo")
-	public String deleteBoard(int bno) {
+	public String deleteBoard(int bno, String filePath, HttpSession session, Model model) {
 		int result = bService.deleteBoard(bno);
+		
+		
+		if(result > 0) {
+			// 삭제 성공
+			
+			// 첨부파일 있을 경우 => 파일 삭제
+			if(!filePath.equals("")) { // filePath = "resources/xxx/xxx.jpg"
+				new File(session.getServletContext().getRealPath(filePath)).delete(); // 서버에 업로드 된 파일을 삭제하는 구문
+			}
+			
+			// 게시판 리스트 페이지 list.bo url 재요청
+			session.setAttribute("alertMsg", "게시글 삭제 완료");
+			
+			return "redirect:list.bo";
+		} else {
+			// 삭제 실패
+			// 에러문구 담아서 에러페이지 포워딩
+			model.addAttribute("errorMsg", "게시글 삭제 실패");
+			
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("updateForm.bo")
+	public String updateForm(int bno, Model model) {
+		// 해당 게시글 조회 후 세팅
+		
+		model.addAttribute("b", bService.selectBoard(bno));
+		
+		return "board/boardUpdateForm";
+	}
+	
+	@RequestMapping("update.bo")
+	public String updateBoard(Board b, MultipartFile reupfile, HttpSession session, Model model) {
+		// 새로 넘어온 첨부파일이 있을 경우
+		if(!reupfile.getOriginalFilename().equals("")) {
+			// 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일 지우기
+			if(b.getOriginName() != null) {
+				new File(session.getServletContext().getRealPath(b.getChangeName())).delete();
+			}
+			
+			// 새로 넘어온 첨부파일 서버 업로드 시키기
+			String changeName = saveFile(reupfile, session);
+			
+			// b에 새로 넘어온 첨부파일에 대한 원본명, 저장 경로 담기
+			b.setOriginName(reupfile.getOriginalFilename());
+			b.setChangeName("resources/uploadFiles/" + changeName);
+		}
+		
+		/*
+		 * b에 boardNo, boardTitle, boardContent 무조건 담겨있음
+		 * 
+		 * 1. 새로 첨부된 파일X, 기존 첨부파일도 없었을 경우X
+		 * 		=> originName: null, changeName: null
+		 * 
+		 * 2. 새로 첨부된 파일 x, 기존 첨부 파일 o
+		 * 		=> originName: 기존 첨부파일 원본명, changeName: 기존 첨부파일 저장 경로
+		 * 
+		 * 3. 새로 첨부된 파일 o, 기존 첨부 파일 x
+		 *  	=> originName: 새로운 첨부파일 원본명, changeName: 새로운 첨부파일 저장 경로
+		 *  
+		 * 4. 새로 첨부된 파일, 기존 첨부 파일 o
+		 * 		=> originName: 새로운 첨부파일 원본명, changeName: 새로운 첨부파일 저장 경로
+		 */
+		
+		int result = bService.updateBoard(b);
+		
+		if(result > 0) { // 수정성공 => 상세페이지
+			session.setAttribute("alertMsg", "게시글 수정 완료");
+			
+			return "redirect:detail.bo?bno=" + b.getBoardNo();
+		} else { // 수정실패 => 에러페이지
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			
+			return "common/errorPage";
+		}
 	}
 }

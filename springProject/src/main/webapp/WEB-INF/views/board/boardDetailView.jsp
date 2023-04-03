@@ -71,10 +71,24 @@
             <br>
 
             <div align="center">
-            <c:if test="${ loginUser.userId == b.boardWriter }">
+            <c:if test="${ not empty loginUser.userId and loginUser.userId eq b.boardWriter }">
                 <!-- 수정하기, 삭제하기 버튼은 이글이 본인글일 경우만 보여져야됨 -->
-	                <a class="btn btn-primary" onclick="">수정하기</a> <!-- 요기에 href="" 를 작성하면 get방식이기 떄문에 노출된다. -->
-	                <a class="btn btn-danger" onclick="">삭제하기</a>
+	                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a> <!-- 요기에 href="" 를 작성하면 get방식이기 떄문에 노출된다. -->
+	                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+	                
+	                <form id="postForm" action="" method="post">
+	                	<input type="hidden" name="bno" value="${ b.boardNo }">
+	                </form>
+	                
+	                <script>
+	                	function postFormSubmit(num){
+	                		if(num == 1){ // 수정하기 클릭 시
+	                			$("#postForm").attr("action", "updateForm.bo").submit();
+	                		} else{ // 삭제하기 클릭 시
+	                			$("#postForm").attr("action", "delete.bo").submit();
+	                		}
+	                	}
+	                </script>
              </c:if>
             </div><br><br>
             

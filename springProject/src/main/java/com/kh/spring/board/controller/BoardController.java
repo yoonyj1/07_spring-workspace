@@ -74,6 +74,13 @@ public class BoardController {
 		return "board/boardEnrollForm";
 	}
 	
+	/*
+	 * * 만약 다중파일 업로드 기능 시?
+	 * 	여러개의 input type = "file" 요소에 다 동일한 키값으로 부여(ex. upfile)
+	 * 	MultipartFile[] upfile로 받으면 됨 (0번 인덱스부터 차곡차곡 첨부파일이 담겨있음) => 반복문 돌려가면서 수행
+	 *	파일 여러개 올릴려면 DB 설계 시 첨부파일만을 담을 수 있는 테이블로 세팅할 것
+	 */
+	
 	@RequestMapping("insert.bo")
 	public String insertBoard(Board b, MultipartFile upfile /* jsp에 있는 upfile 이름과 맞춰야함 */, HttpSession session, Model model) {
 		// System.out.println(b);
@@ -188,5 +195,10 @@ public class BoardController {
 			
 			return "common/errorPage";
 		}
+	}
+	
+	@RequestMapping("delete.bo")
+	public String deleteBoard(int bno) {
+		int result = bService.deleteBoard(bno);
 	}
 }

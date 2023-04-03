@@ -81,4 +81,11 @@ update
 		board_no = #{boardNo}
 </select>
 
+<update id="deleteBoard">
+	update
+			board
+		set status='N'
+	where board_no = #{boardNo}
+</update>
+
 </mapper>

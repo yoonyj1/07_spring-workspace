@@ -67,7 +67,7 @@
 
                 <div align="center">
                     <button type="submit" class="btn btn-primary">수정하기</button>
-                    <button type="button" class="btn btn-danger">이전으로</button>
+                    <button type="button" class="btn btn-danger" onclick="history.back(-1);">이전으로</button>
                 </div>
             </form>
         </div>

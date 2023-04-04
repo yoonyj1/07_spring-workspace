@@ -19,6 +19,8 @@
 	<!-- <button id="btn">전송</button> -->
 	<button onclick="test1();">전송</button>
 	
+	<div id="result1"></div>
+	
 	<script>
 		/* $("#btn").click(function(){
 			
@@ -31,8 +33,9 @@
 					name: $("#name").val(),
 					age: $("#age").val()
 				},
-				success:function(){
-					
+				success:function(result){
+					console.log(result);
+					$("#result1").html(result);
 				},
 				error:function(){
 					console.log("ajax 통신 실패");

@@ -100,11 +100,23 @@
             <table id="replyArea" class="table" align="center">
                 <thead>
                     <tr>
-                        <th colspan="2">
-                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%"></textarea>
-                        </th>
-                        <th style="vertical-align: middle"><button class="btn btn-secondary">등록하기</button></th>
-                    </tr>
+                   		<c:choose>
+                   			<c:when test="${empty loginUser }">
+		                        <th colspan="2">
+		                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%" readonly>로그인한 사용자만 이용가능한 서비스입니다. 로그인 후 이용바랍니다.</textarea>
+		                        </th>
+		                        <th style="vertical-align: middle"><button class="btn btn-secondary" disabled>등록하기</button></th>
+		                    
+                    		</c:when>
+                    		<c:otherwise>
+                    			<th colspan="2">
+		                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%"></textarea>
+		                        </th>
+		                        <th style="vertical-align: middle"><button class="btn btn-secondary">등록하기</button></th>
+                    		</c:otherwise>
+                   		</c:choose>
+               		</tr>
+                    		
                     <tr>
                        <td colspan="3">댓글 (<span id="rcount">3</span>) </td> 
                     </tr>
@@ -130,6 +142,25 @@
         </div>
         <br><br>
     </div>
+    
+    <script>
+    	$(function(){
+    		selectReplyList();
+    	})
+    	
+    	function selectReplyList(){ // 해당 게시글에 딸린 댓글리스트 조회용
+    		$.ajax({
+    			url:"rlist.bo",
+    			data:{bno:${b.boardNo}},
+    			success:function(){
+    				
+    			},
+    			error:function(){
+    				console.log("댓글 조회용 ajax 통신 실패");
+    			}
+    		});
+    	}
+    </script>
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>

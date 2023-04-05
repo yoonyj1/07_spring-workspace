@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.board.model.service.BoardServiceImpl;
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 import com.kh.spring.common.template.Pagination;
 
@@ -276,5 +277,10 @@ public class BoardController {
 			
 			return "common/errorPage";
 		}
+	}
+	
+	@RequestMapping("rlist.bo")
+	public String ajaxSelectReplyList(int bno) {
+		ArrayList<Reply> list = bService.selectReplyList(bno);
 	}
 }

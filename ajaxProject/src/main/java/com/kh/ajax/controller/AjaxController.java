@@ -1,6 +1,7 @@
 package com.kh.ajax.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +10,9 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.kh.ajax.model.vo.Member;
 
 @Controller
 public class AjaxController {
@@ -89,11 +93,55 @@ public class AjaxController {
 	}
 	*/
 	
-	
-	@RequestMapping(value="ajax1.do")
+	@ResponseBody
+	@RequestMapping(value="ajax1.do", produces="application/json; charset=utf-8")
 	public String ajaxMethod1(String name, int age) {
 		JSONObject jObj = new JSONObject();
 		jObj.put("name", name); // {name:'윤여진'}
 		jObj.put("age", age); // {age:29, name:'윤여진'}
+		
+		return jObj.toJSONString(); // "{age:12, name:"윤여진"}"
+	}
+	
+	/*
+	@ResponseBody
+	@RequestMapping(value="ajax2.do", produces="application/json; charset=utf-8")
+	public String ajaxMethod2(int num) {
+		// Member m = mService.selectMember(num);
+		
+		Member m = new Member("user01", "pass01", "차은우", 20, "01012345679");
+		
+		// JSON 형태로 만들어서 응답
+		// JSONObject
+		JSONObject jObj = new JSONObject();
+		jObj.put("userId", m.getUserId());
+		jObj.put("userName", m.getUserName());
+		jObj.put("age", m.getAge());
+		jObj.put("phone", m.getPhone());
+		
+		return jObj.toJSONString();
+		
+	}
+	*/
+	
+	@ResponseBody
+	@RequestMapping(value="ajax2.do", produces="application/json; charset=utf-8")
+	public String ajaxMethod2(int num) {
+		Member m = new Member("user01", "pass01", "차은우", 20, "01012345679");
+
+		return new Gson().toJson(m); // json 형태로 만들어서 문자열로 리턴해주며 멤버객체의 필드명으로 키값이 잡힘
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="ajax3.do", produces="application/json; charset=utf-8")
+	public String ajaxMethod3() {
+		// ArrayList<Member> list = mService.selectMember();
+		
+		ArrayList<Member> list = new ArrayList<Member>();
+		list.add(new Member("user01", "pass01", "차은우", 20, "01012345679"));
+		list.add(new Member("user02", "pass02", "가나다", 30, "01032545679"));
+		list.add(new Member("user03", "pass03", "라마바", 120, "01056345679"));
+		
+		return new Gson().toJson(list);
 	}
 }

@@ -14,6 +14,15 @@
 	<result column="status" property="status"/>
 </resultMap>
 
+<resultMap type="Reply" id="ReplyResultSet">
+	<result column="reply_no" property="replyNo"/>
+	<result column="reply_no" property="replyContent"/>
+	<result column="reply_no" property="refBoardNo"/>
+	<result column="reply_no" property="replyWriter"/>
+	<result column="reply_no" property="createDate"/>
+	<result column="reply_no" property="status"/>
+</resultMap>
+
 <select id="selectListCount" resultType="_int">
 	select
 		count(*)
@@ -99,5 +108,20 @@ update
 	where board_no = #{boardNo}
 			
 </update>
+
+<select id="selectReplyList" resultMap="ReplyResultSet">
+	select
+			reply_no
+		  , reply_writer	
+		  , reply_content
+		  , to_char(create_date, 'YYYY-MM-DD') as 'create_date'
+	  from
+	  		reply
+	 where
+			ref_bno = #{boardNo}
+	   and status = 'Y'
+     order by
+     		reply_no desc	
+</select>
 
 </mapper>

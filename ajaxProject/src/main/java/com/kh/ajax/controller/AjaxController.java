@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +37,8 @@ public class AjaxController {
 	 * 따라서 내가 리턴하는 문자열이 응답뷰가 아닌 응답데이터라는 것을 선언하는 @ResponseBody를 붙여야됨
 	 * 인코딩 필터는 동기식 방식에 해당하는 것이라서 이거랑은 상관없음
 	 */
+	
+	/*
 	@ResponseBody
 	// @RequestMapping("ajax1.do")
 	// @RequestMapping(value="ajax1.do") // 이게 정석이지만 value가 하나면 value= 생략가능
@@ -43,5 +47,53 @@ public class AjaxController {
 		String responseData = "응답 문자열: " + name + "은(는)" + age + "살 입니다.";
 		
 		return responseData;
+	}
+	*/
+	
+	/*
+	// 다수의 응답데이터가 있을 경우
+	@RequestMapping("ajax1.do")
+	public void ajaxMethod1(String name, int age, HttpServletResponse response) throws IOException {
+		// 요청 처리가 다 됐다는 가정 하에 데이터 응답
+		/* response.setContentType("text/html; charset=utf-8"); */
+		
+		/*
+		 * response.getWriter().print(name); 
+		 * response.getWriter().print(age);
+		 */
+		
+		// 출력하는 데이터가 하나의 문자열로 연이어져 있음
+		
+		// JSON(JavaScript Object Notation) 형태로 담아서 응답
+		// JSONArray => [값, 값, 값, ...] => Java의 ArrayList와 유사
+		// JSONObject => {키:값, 키:값, 키:값..} => Java에서의 HashMap과 유사
+		
+		// 1) JSONArray로 담아서 응답
+		/*
+			JSONArray jArr = new JSONArray(); // []
+			jArr.add(name); // ["윤여진"]
+			jArr.add(age); // ["윤여진", age]
+			
+			response.setContentType("application/json; charset=utf-8");
+			response.getWriter().print(jArr);
+		
+		
+		// 2) JSONObject로 담아서 응답
+		JSONObject jObj = new JSONObject(); // {}
+		jObj.put("name", name); // {name:"윤여진"}
+		jObj.put("age", age); // {age:20, name:"윤여진"} => 순서대로 안담겨서 랜덤으로 담김
+		
+		response.setContentType("application/json; charset=utf-8");
+		
+		response.getWriter().print(jObj);
+	}
+	*/
+	
+	
+	@RequestMapping(value="ajax1.do")
+	public String ajaxMethod1(String name, int age) {
+		JSONObject jObj = new JSONObject();
+		jObj.put("name", name); // {name:'윤여진'}
+		jObj.put("age", age); // {age:29, name:'윤여진'}
 	}
 }

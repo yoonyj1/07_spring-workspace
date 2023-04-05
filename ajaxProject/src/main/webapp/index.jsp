@@ -26,7 +26,7 @@
 			
 		}) */
 		
-		function test1(){
+		/* function test1(){
 			$.ajax({
 				url:"ajax1.do",
 				data:{
@@ -41,7 +41,50 @@
 					console.log("ajax 통신 실패");
 				}
 			});
+		} */
+		
+		/* JSONArray 사용
+		function test1(){
+			$.ajax({
+				url:"ajax1.do",
+				data:{
+					name: $("#name").val(),
+					age: $("#age").val()
+				},
+				success:function(result){
+					console.log(result);
+					
+					// 응답데이터가 배열의 형태일 경우 => 인덱스에 접근 가능 result[인덱스]
+					let value = "이름: " + result[0] + " <br>나이: " + result[1];
+					$("#result1").html(value);
+				},
+				error:function(){
+					console.log("ajax 통신 실패");
+				}
+			});
 		}
+		*/
+		
+		function test1(){
+			$.ajax({
+				url:"ajax1.do",
+				data:{
+					name: $("#name").val(),
+					age: $("#age").val()
+				},
+				success:function(result){
+					console.log(result);
+					
+					// 응답데이터가 단순객체의 형태일 경우 => 속성에 접근 가능 .속성명
+					let value = "이름: " + result.name + "<br>나이: " + result.age;
+					$("#result1").html(value);
+				},
+				error:function(){
+					console.log("ajax 통신 실패");
+				}
+			});
+		}
+		
 	</script>
 
 </body>

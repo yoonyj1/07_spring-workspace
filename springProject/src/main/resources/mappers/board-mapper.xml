@@ -16,11 +16,11 @@
 
 <resultMap type="Reply" id="ReplyResultSet">
 	<result column="reply_no" property="replyNo"/>
-	<result column="reply_no" property="replyContent"/>
-	<result column="reply_no" property="refBoardNo"/>
-	<result column="reply_no" property="replyWriter"/>
-	<result column="reply_no" property="createDate"/>
-	<result column="reply_no" property="status"/>
+	<result column="reply_content" property="replyContent"/>
+	<result column="ref_bno" property="refBoardNo"/>
+	<result column="reply_writer" property="replyWriter"/>
+	<result column="create_date" property="createDate"/>
+	<result column="status" property="status"/>
 </resultMap>
 
 <select id="selectListCount" resultType="_int">
@@ -114,7 +114,7 @@ update
 			reply_no
 		  , reply_writer	
 		  , reply_content
-		  , to_char(create_date, 'YYYY-MM-DD') as 'create_date'
+		  , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 	  from
 	  		reply
 	 where
@@ -123,5 +123,24 @@ update
      order by
      		reply_no desc	
 </select>
+
+<insert id="insertReply">
+	insert
+		into
+			reply
+			(
+			 reply_no	 
+		   , reply_content
+		   , ref_bno
+		   , reply_writer
+			)
+			values
+			(
+			 seq_rno.nextval
+		   , #{replyContent}
+		   , #{refBoardNo}
+		   , #{replyWriter} 	
+			)
+</insert>
 
 </mapper>

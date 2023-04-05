@@ -112,31 +112,17 @@
                     			<th colspan="2">
 		                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%"></textarea>
 		                        </th>
-		                        <th style="vertical-align: middle"><button class="btn btn-secondary">등록하기</button></th>
+		                        <th style="vertical-align: middle"><button class="btn btn-secondary" onclick="addReply();">등록하기</button></th>
                     		</c:otherwise>
                    		</c:choose>
                		</tr>
                     		
                     <tr>
-                       <td colspan="3">댓글 (<span id="rcount">3</span>) </td> 
+                       <td colspan="3">댓글 (<span id="rcount">0</span>) </td> 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>댓글입니다.너무웃기다앙</td>
-                        <td>2023-03-03</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>많이봐주세용</td>
-                        <td>2023-01-08</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다ㅋㅋㅋ</td>
-                        <td>2022-12-02</td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
@@ -148,11 +134,50 @@
     		selectReplyList();
     	})
     	
+    	function addReply(){ // 댓글 작성용 ajax
+    		if($("#content").val().trim().length != 0) { // 유효한 댓글 작성 시 => insert ajax 요청
+    			$.ajax({
+    				url:"rinsert.bo",
+    				data:{
+    					refBoardNo:${b.boardNo},
+    					replyContent:$("#content").val(),
+    					replyWriter:'${loginUser.userId}' // 문자열은 이렇게 가져와야함
+    				},
+    				success:function(status){
+    					if(status == "success"){
+    						selectReplyList();
+    						$("#content").val("");
+    					}
+    				},
+    				error:function(){
+    					console.log("ajax 통신 실패");
+    				}
+    			})
+    		} else{
+    			alertify.alert("내용을 입력해주세요.");
+    		}
+    	}
+    	
     	function selectReplyList(){ // 해당 게시글에 딸린 댓글리스트 조회용
     		$.ajax({
     			url:"rlist.bo",
     			data:{bno:${b.boardNo}},
-    			success:function(){
+    			success:function(list){
+    				console.log(list);
+    				
+    				let value = "";
+    				
+    				for(let i in list){
+    					value += "<tr>"
+    							+ "<th>" + list[i].replyWriter + "</th>"
+    							+ "<td>" + list[i].replyContent + "</td>"
+    							+ "<td>" + list[i].createDate + "</td>"
+    							+ "</tr>"
+     				}
+    				
+    				$("#replyArea tbody").html(value);
+    				
+    				$("#rcount").text(list.length)
     				
     			},
     			error:function(){

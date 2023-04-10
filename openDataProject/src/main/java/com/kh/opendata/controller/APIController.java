@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -44,6 +45,37 @@ public class APIController {
 		urlConnection.disconnect();
 		
 		// System.out.println(responseText);
+		
+		return responseText;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="comp.do", produces="application/json; charset=utf-8")
+	public String roadList() throws IOException {
+		String url = "https://apis.data.go.kr/1160100/service/GetCorpBasicInfoService_V2/getAffiliate_V2";
+		url += "?serviceKey=" + servicekey;
+		url += "&pageNo=1";
+		url += "&numOfRows=10";
+		url += "&returnType=json";
+		url += "&basDt=20200517";
+		
+		URL requestUrl = new URL(url);
+		
+		HttpURLConnection urlConnection = (HttpURLConnection)requestUrl.openConnection();
+		
+		urlConnection.setRequestMethod("GET");
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		
+		String line;
+		String responseText = "";
+		
+		while((line = br.readLine())!= null) {
+			responseText += line;
+		}
+		
+		br.close();
+		urlConnection.disconnect();
 		
 		return responseText;
 	}

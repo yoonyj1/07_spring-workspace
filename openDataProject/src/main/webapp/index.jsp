@@ -37,6 +37,7 @@
 	<script>
 
 		$("#btn1").click(function(){
+			/* json 형식으로 응답받을 때 형식
 			$.ajax({
 				url: "air.do",
 				data:{location:$("#location").val()},
@@ -68,6 +69,50 @@
 				error:function(){
 					console.log("ajax 통신 실패");
 				}
+			}) */
+			
+			// xml 형식으로 응답받을 때
+			$.ajax({
+				url: "air.do",
+				data:{location:$("#location").val()},
+				success:function(data){
+					console.log(data);
+					// jQuery 탐색 메소드
+					// find 메소드: 기준이 되는 하위 요소들 중 특정요소를 찾을 때 사용(html, xml 다 사용가능)
+					
+					/* console.log(data.find("item")); */ // find 메소드는 제이쿼리 메소드 / 제이쿼리화 시켜야함
+					// console.log($(data).find("item"));
+					
+					// xml 형식의 응답데이터를 받았을 때
+					// 1. 응답데이터 안에 실제 데이터가 담겨있는 요소 선택
+					
+					let itemArr = $(data).find("item");
+					
+					// 2. 반복문을 통해 실제 데이터가 담긴 요소들에 접근해서 동적으로 요소 만들기
+					let value = "";
+					itemArr.each(function(i, item){ // i에는 인덱스값, item은 순차적으로 접근한 요소
+						// console.log(item);
+						// console.log($(item).find("stataionName")); // <station>중구</station>
+						// console.log($(item).find("stataionName").text());
+						
+						value += "<tr>"
+								+ "<td>" + $(item).find("stationName").text() + "</td>"
+								+ "<td>" + $(item).find("dataTime").text() + "</td>"
+								+ "<td>" + $(item).find("khaiValue").text() + "</td>"
+								+ "<td>" + $(item).find("pm10Value").text() + "</td>"
+								+ "<td>" + $(item).find("coValue").text() + "</td>"
+								+ "<td>" + $(item).find("no2Value").text() + "</td>"
+								+ "<td>" + $(item).find("so2Value").text() + "</td>"
+								+ "<td>" + $(item).find("o3Value").text() + "</td>"
+								+ "</tr>"
+					})
+					
+					// 3. 동적으로 만들어낸 요소를 화면에 출력
+					$("#result1 tbody").html(value);
+				},
+				error:function(){
+					console.log("ajax 통신 실패");
+				}
 			})
 		})
 
@@ -75,47 +120,109 @@
 	
 	<hr>
 	
-	<h2>도로 통행속도 통계 조회 서비스</h2>
-	<button id="btn2">확인</button>
-	<select id="direction">
-		<option>상행</option>
-		<option>하행</option>
+	<h2>기업기본정보 조회 서비스</h2>
+	
+	<select id="crno">
+		<option>1101110028939</option>
 	</select>
+	<button id="btn2">확인</button>
+	
 	<table>
 		<thead>
-			<th>날짜</th>
-			<th>주</th>
-			<th>도로명</th>
-			<th>도로ID</th>
-			<th>방향</th>
-			<th>시작주소</th>
-			<th>도착주소</th>
-			<th>도로길이</th>
-			<th>도로종류</th>
-			<th>측정00</th>
-			<th>측정04</th>
-			<th>측정09</th>
-			<th>측정14</th>
-			<th>측정19</th>
-			<th>측정23</th>
+			<th>법인등록번호</th>
+			<th>법인명</th>
+			<th>법인기본주소</th>
 		</thead>
 		<tbody></tbody>
 	</table>
 	
 	<script>
-	
 		$("#btn2").click(function(){
 			$.ajax({
-				url:"road.do",
-				data:{$("#direction").val()},
-				success:function(data){
+				url:"comp.do",
+				data:{crno:$("#crno").val()},
+				success:function(data) {
 					console.log(data);
 				},
 				error:function(){
-					console.log("ajax 통신실패");
+					console.log("ajax 통신 실패");
 				}
 			})
 		})
 	</script>
+	
+	<hr>
+	
+	<h2>지진해일대피소 정보</h2>
+	<input type="button" value="실행" id="btn3">
+	<div id="result3">
+		
+	</div>
+	
+	<script>
+		$(function(){
+			$("#btn3").click(function(){
+				$.ajax({
+					url:"disaster.do",
+					success:function(data){
+						// console.log(data)
+						// console.log($(data).find("row"));
+						
+						// jQuery 방식으로 동적으로 table 요소 만들기
+						
+						let $table = $("<table border='1'></table>");
+						let $thead = $("<thead></thead>");
+						let headTr = "<tr>"
+									+ "<th>일련번호</th>"
+									+ "<th>시도명</th>"
+									+ "<th>시군구명</th>"
+									+ "<th>대피장소명</th>"
+									+ "<th>주소</th>"
+									+ "<th>수용가능인원(명)</th>"
+									+ "<th>해변으로부터 거리</th>"
+									+ "<th>대피소분류명</th>"
+									+ "</tr>";
+									
+						// 결합작업
+						$thead.html(headTr);
+						
+						let $tbody = $("<tbody></tbody>");
+						let bodyTr = "";
+						
+						$(data).find("row").each(function(i, row){ // i는 인덱스값, row는 순차적으로 접근한 요소
+							//console.log(row);
+							// console.log($(row).find("shel_nm").text());
+							
+							bodyTr += "<tr>"
+									+ "<td>" + $(row).find("id").text() + "</td>"
+									+ "<td>" + $(row).find("sido_name").text() + "</td>"
+									+ "<td>" + $(row).find("sigungu_name").text() + "</td>"
+									+ "<td>" + $(row).find("shel_nm").text() + "</td>"
+									+ "<td>" + $(row).find("address").text() + "</td>"
+									+ "<td>" + $(row).find("shel_av").text() + "</td>"
+									+ "<td>" + $(row).find("lenth").text() + "</td>"
+									+ "<td>" + $(row).find("shel_div_type").text() + "</td>"
+									+ "</tr>";
+						});
+						
+						// 결합
+						$tbody.html(bodyTr);
+						
+						// jQuery 방식으로 만들어진 요소를 자식으로 추가할 때는 이렇게 해야함
+						// html() 메소드는 안에 String을 넣어야함		
+						// $table.append($thead, $tbody); // a.append(b) => a 안에 b를 추가하겠다.
+						// $table.appendTo("#result3"); // a.appendTo(b) => b 안에 a를 추가하겠다.
+						
+						$table.append($thead, $tbody)
+							  .appendTo("#result3");
+					},
+					error:function(){
+						console.log("ajax 통신 실패");
+					}
+				})
+			})
+		})
+	</script>
+	
 </body>
 </html>

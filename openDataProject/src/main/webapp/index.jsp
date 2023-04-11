@@ -161,6 +161,7 @@
 	
 	<script>
 		$(function(){
+			/*
 			$("#btn3").click(function(){
 				$.ajax({
 					url:"disaster.do",
@@ -221,7 +222,84 @@
 					}
 				})
 			})
+			*/
+			
+			$("#btn3").click(() => {
+				$.ajax({
+					url:"disaster.do",
+					success:(data) => {
+						// console.log(data)
+						// console.log($(data).find("row"));
+						
+						// jQuery 방식으로 동적으로 table 요소 만들기
+						
+						let $table = $("<table border='1'></table>");
+						let $thead = $("<thead></thead>");
+						let headTr = "<tr>"
+									+ "<th>일련번호</th>"
+									+ "<th>시도명</th>"
+									+ "<th>시군구명</th>"
+									+ "<th>대피장소명</th>"
+									+ "<th>주소</th>"
+									+ "<th>수용가능인원(명)</th>"
+									+ "<th>해변으로부터 거리</th>"
+									+ "<th>대피소분류명</th>"
+									+ "</tr>";
+									
+						// 결합작업
+						$thead.html(headTr);
+						
+						let $tbody = $("<tbody></tbody>");
+						let bodyTr = "";
+						
+						$(data).find("row").each((i, row) => { // i는 인덱스값, row는 순차적으로 접근한 요소
+							//console.log(row);
+							// console.log($(row).find("shel_nm").text());
+							
+							bodyTr += "<tr>"
+									+ "<td>" + $(row).find("id").text() + "</td>"
+									+ "<td>" + $(row).find("sido_name").text() + "</td>"
+									+ "<td>" + $(row).find("sigungu_name").text() + "</td>"
+									+ "<td>" + $(row).find("shel_nm").text() + "</td>"
+									+ "<td>" + $(row).find("address").text() + "</td>"
+									+ "<td>" + $(row).find("shel_av").text() + "</td>"
+									+ "<td>" + $(row).find("lenth").text() + "</td>"
+									+ "<td>" + $(row).find("shel_div_type").text() + "</td>"
+									+ "</tr>";
+						});
+						
+						// 결합
+						$tbody.html(bodyTr);
+						
+						// jQuery 방식으로 만들어진 요소를 자식으로 추가할 때는 이렇게 해야함
+						// html() 메소드는 안에 String을 넣어야함		
+						// $table.append($thead, $tbody); // a.append(b) => a 안에 b를 추가하겠다.
+						// $table.appendTo("#result3"); // a.appendTo(b) => b 안에 a를 추가하겠다.
+						
+						$table.append($thead, $tbody)
+							  .appendTo("#result3");
+					},
+					error:() => {
+						console.log("ajax 통신 실패");
+					}
+				})
+			})
 		})
+		
+		/*
+		
+			** 화살표 함수 **
+			익명함수들을 화살표 함수로 작성할 수 있음
+			
+			"function() {}" 를 				"() => {}" 이런식으로 작성 가능
+			
+			"function(data) {}"를			"data => {}" 이런식으로 작성 가능 (매개변수가 하나 있을 경우 ()생략가능)
+			
+			"function(a, b) {}"를			"(a,b) => {}" 이런식으로 작성 가능 (매개변수가 여러개)
+			
+			"function() {return 10;}"를		"()	=> 10" 이런식으로 작성 가능
+		
+		*/
 	</script>
 	
 </body>
